@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import me.greeenly.userservice.domain.User;
 import me.greeenly.userservice.dto.UserDto;
 import me.greeenly.userservice.repository.UserRepository;
+import me.greeenly.userservice.vo.ResponseOrder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,5 +38,22 @@ public class UserServiceImpl implements UserService {
         return returnUserDto;
     }
 
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found"); // security 관련 에러라 적절하지 않음.
+        }
+        UserDto userDto = new ModelMapper().map(user, UserDto.class);
 
+        List<ResponseOrder> orders = new ArrayList<>();
+        userDto.setOrders(orders);
+
+        return userDto;
+    }
+
+    @Override
+    public Iterable<User> getUserByAll() {
+        return userRepository.findAll();
+    }
 }
