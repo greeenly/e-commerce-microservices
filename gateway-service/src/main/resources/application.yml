@@ -28,6 +28,10 @@ spring:
           #            - AddRequestHeader=first-request, first-request-header2
           #            - AddResponseHeader=first-response, first-response-header2
           - CustomFilter
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE # 유레카에 등록된 application 이름
+          predicates:
+            - Path=/catalog-service/** # user-service 로 들어오는 요청은 모두 해당 서비스로 포워딩
 #        - id: second-service
 #          uri: lb://MY-SECOND-SERVICE
 #          predicates:
