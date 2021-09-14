@@ -19,16 +19,16 @@ public class Order implements Serializable {
     @Column(nullable = false, length = 120, unique = true)
     private String productId;
     @Column(nullable = false)
-    private String quantity;
+    private Integer quantity;
     @Column(nullable = false)
     private Integer unitPrice;
     @Column(nullable = false)
     private Integer totalPrice;
 
     @Column(nullable = false)
-    private Integer userId;
+    private String userId;
     @Column(nullable = false, unique = true)
-    private Integer orderId;
+    private String orderId;
 
     @Column(nullable = false, updatable = false, insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
