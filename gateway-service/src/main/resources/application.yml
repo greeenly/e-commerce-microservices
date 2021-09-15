@@ -21,13 +21,29 @@ spring:
             postLogger: true
       routes:
         - id: user-service
-          uri: lb://USER-SERVICE # 유레카에 등록된 application 이름
+          uri: lb://USER-SERVICE
           predicates:
-          - Path=/user-service/** # user-service 로 들어오는 요청은 모두 해당 서비스로 포워딩
+            - Path=/user-service/login # 로그인 요청
+            - Method=POST
           filters:
-          #            - AddRequestHeader=first-request, first-request-header2
-          #            - AddResponseHeader=first-response, first-response-header2
-          - CustomFilter
+            - RemoveRequestHeader=Cookie # post로 전달되는 데이터를 매번 새로운 데이터처럼 인식하기 위해서.
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # /user-service/(?<segment>.*) 를 /$\{segment} 로 바꾸겠다.
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users # 회원가입 요청
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/** # 그외 요청
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: catalog-service
           uri: lb://CATALOG-SERVICE # 유레카에 등록된 application 이름
           predicates:
