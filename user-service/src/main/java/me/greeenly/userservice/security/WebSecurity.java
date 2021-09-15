@@ -11,11 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.servlet.Filter;
-
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final Environment env; // 토큰 유효시간등의 정보가 필요해서
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,6 +37,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         authenticationFilter.setAuthenticationManager(authenticationManager());
 
         return authenticationFilter;
+    }
+
+    // 인증관련
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Bean
