@@ -70,4 +70,12 @@ public class UserServiceImpl implements UserService {
     public Iterable<User> getUserByAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public UserDto getUserDetailsByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        UserDto userDto = new ModelMapper().map(user, UserDto.class);
+        return userDto;
+    }
 }
