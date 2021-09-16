@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -80,7 +81,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withSubject(userDetails.getUserId())
                 .withExpiresAt(new Date(System.currentTimeMillis() +
                         Long.parseLong(env.getProperty("token.expiration_time"))))
-                .sign(Algorithm.HMAC256("token.secret"));
+                .sign(Algorithm.HMAC256(Base64.getDecoder().decode(env.getProperty("token.secret"))));
 
         response.addHeader("token", token);
         response.addHeader("userId", userDetails.getUserId());

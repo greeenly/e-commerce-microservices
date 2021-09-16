@@ -44,6 +44,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: catalog-service
           uri: lb://CATALOG-SERVICE # 유레카에 등록된 application 이름
           predicates:
@@ -52,3 +53,7 @@ spring:
           uri: lb://ORDER-SERVICE # 유레카에 등록된 application 이름
           predicates:
             - Path=/order-service/** # user-service 로 들어오는 요청은 모두 해당 서비스로 포워딩
+
+token:
+  expiration_time: 86400000
+  secret: greeenly
