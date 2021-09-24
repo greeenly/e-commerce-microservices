@@ -4,9 +4,7 @@ package com.example.gatewayservice.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -59,7 +57,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
 
         log.error(err);
         return response.setComplete();
@@ -70,7 +67,8 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         String subject = null;
 
         try {
-            DecodedJWT verify = JWT.require(Algorithm.HMAC256(Base64.getDecoder().decode(env.getProperty("token.secret")))).build().verify(token);
+            DecodedJWT verify = JWT.require(Algorithm.HMAC256(Base64.getDecoder()
+                    .decode(env.getProperty("token.secret")))).build().verify(token);
             System.out.println(verify.getHeader());
             System.out.println(verify.getPayload());
             subject = verify.getSubject();

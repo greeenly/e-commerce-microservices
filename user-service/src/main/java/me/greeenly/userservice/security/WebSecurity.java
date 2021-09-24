@@ -25,7 +25,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 //        http.authorizeRequests().antMatchers("/users/**").permitAll(); // 인증 필터를 사용하기 때문에 주석처리.
         http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("192.168.219.103") // 나의 Ip
+                .hasIpAddress("192.168.45.165") // 나의 Ip
                 .and()
                 .addFilter(getAuthenticationFilter());
 
